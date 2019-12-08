@@ -17,6 +17,34 @@ function insertCards(html) {
 
     // Add the new div to the document
     document.body.appendChild(div);
+    wrapCards();
+}
+
+function wrapCards() {
+  [...document.getElementsByClassName('card-content-container')].forEach(function(cardContent) {
+    card = cardContent.parentElement;
+
+    if(card.scrollHeight === card.clientHeight) {
+      return;
+    }
+
+    cardContent.innerHTML += '<div class="card-element card-description-line"><p class="card-p card-description-text wrap-message">(continued on back)</p></div>';
+
+    page = card.parentElement;
+    cardIndex = [...page.children].indexOf(card);
+    nextPage = page.nextElementSibling;
+    back = nextPage.children[cardIndex];
+
+    nextPage.replaceChild(card.cloneNode(true), back);
+    back = nextPage.children[cardIndex];
+    backContent = back.getElementsByClassName('card-content-container')[0];
+    backContent.innerHTML = '';
+
+    while(card.scrollHeight !== card.clientHeight) {
+      el = cardContent.removeChild(cardContent.lastElementChild.previousElementSibling);
+      backContent.insertBefore(el, backContent.firstElementChild);
+    }
+  });
 }
 
 window.addEventListener("message", receiveMessage, false);

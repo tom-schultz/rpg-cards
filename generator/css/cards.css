@@ -263,3 +263,10 @@
     margin-top: 0;
     font-size: inherit;
 }
+
+.wrap-message {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+}
