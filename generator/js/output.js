@@ -1,6 +1,10 @@
 function receiveMessage(event) {
-    var html = event.data;
+    var html = event.data.html;
     insertCards(html);
+
+    if(event.data.wrapText) {
+      wrapCards();
+    }
 }
 
 function insertCards(html) {
@@ -17,7 +21,6 @@ function insertCards(html) {
 
     // Add the new div to the document
     document.body.appendChild(div);
-    wrapCards();
 }
 
 function wrapCards() {

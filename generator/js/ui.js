@@ -54,7 +54,7 @@ function ui_generate() {
 
     // Send the generated HTML to the new window
     // Use a delay to give the new window time to set up a message listener
-    setTimeout(function () { tab.postMessage(card_html, '*'); }, 500);
+    setTimeout(function () { tab.postMessage({html: card_html, wrapText: card_options.wrap_text}, '*'); }, 500);
 }
 
 function ui_load_sample() {
@@ -534,6 +534,7 @@ $(document).ready(function () {
     $("#background-color").change(ui_change_option);
     $("#rounded-corners").change(ui_change_option);
     $("#frame-back").change(ui_change_option);
+    $("#wrap-text").change(ui_change_option);
 
     $("#default-color").change(ui_change_default_color);
     $("#default-icon").change(ui_change_default_icon);

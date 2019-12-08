@@ -16,7 +16,8 @@ function card_default_options() {
         card_count: null,
         icon_inline: true,
         rounded_corners: true,
-        frame_back: false
+        frame_back: false,
+        wrap_text: false
     };
 }
 
@@ -521,7 +522,7 @@ function card_pages_generate_html(card_data, options) {
 
         // Shuffle back cards so that they line up with their corresponding front cards
         back_pages = back_pages.map(function (page) {
-            return cards_pages_flip_left_right(page, rows, cols);
+            return cards_pages_flip_left_right(page, cols, rows);
         });
 
         // Interleave front and back pages so that we can print double-sided
