@@ -15,7 +15,8 @@ function card_default_options() {
         card_size: "25x35",
         card_count: null,
         icon_inline: true,
-        rounded_corners: true
+        rounded_corners: true,
+        frame_back: false
     };
 }
 
@@ -159,13 +160,13 @@ function card_element_property(params, card_data, options) {
     result += '<div class="card-element card-property-line">';
     result += '   <h4 class="card-property-name">' + params[0] + '</h4>';
     result += '   <p class="card-p card-property-text">' + params[1] + '</p>';
-	if (params[2])
-	{
-		result += '   <div style="float:right">';
-		result += '       <h4 class="card-property-name">' + params[2] + '</h4>';
-		result += '       <p class="card-p card-property-text">' + params[3] + '</p>';
-		result += '   </div>';
-	}
+    if (params[2])
+    {
+        result += '   <div style="float:right">';
+        result += '       <h4 class="card-property-name">' + params[2] + '</h4>';
+        result += '       <p class="card-p card-property-text">' + params[3] + '</p>';
+        result += '   </div>';
+    }
     result += '</div>';
     return result;
 }
@@ -325,6 +326,10 @@ function card_generate_color_gradient_style(color, options) {
 }
 
 function card_generate_front(data, options) {
+    return card_generate_frame(data, options, true);
+}
+
+function card_generate_frame(data, options, has_content) {
     var color = card_data_color_front(data, options);
     var style_color = card_generate_color_style(color, options);
 
@@ -332,41 +337,52 @@ function card_generate_front(data, options) {
     result += '<div class="card card-size-' + options.card_size + ' ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + style_color + '>';
     result += card_element_icon(data, options);
     result += card_element_title(data, options);
-    result += card_generate_contents(data.contents, data, options);
-    result += '</div>';
 
+    content = has_content ? data.contents : []
+    result += card_generate_contents(content, data, options);
+
+    result += '</div>';
     return result;
 }
 
 function card_generate_back(data, options) {
-    var color = card_data_color_back(data, options);
-    var style_color = card_generate_color_style(color, options);
-	var url = data.background_image;
-	var background_style = "";
-	if (url)
-	{
-		background_style = 'style = "background-image: url(&quot;' + url + '&quot;); background-size: contain; background-position: center; background-repeat: no-repeat;"';
-	}
-	else 
-	{
-		background_style = card_generate_color_gradient_style(color, options);
+    if(options.frame_back) {
+        return card_generate_frame(data, options, false);
     }
-	var icon = card_data_icon_back(data, options);
+    else {
+        return card_generate_gradient(data, options);
+}
 
-    var result = "";
-    console.log('options.rounded_corners', options.rounded_corners);
-    result += '<div class="card card-size-' + options.card_size + ' ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + style_color + '>';
-    result += '  <div class="card-back" ' + background_style + '>';
-	if (!url)
-	{
-		result += '    <div class="card-back-inner">';
-		result += '      <div class="card-back-icon icon-' + icon + '" ' + style_color + '></div>';
-		result += '    </div>';
-	}
-    result += '  </div>';
-    result += '</div>';
+function card_generate_gradient(data, options) {
+        var color = card_data_color_back(data, options);
+        var style_color = card_generate_color_style(color, options);
+        var url = data.background_image;
+        var background_style = "";
+        if (url)
+        {
+            background_style = 'style = "background-image: url(&quot;' + url + '&quot;); background-size: contain; background-position: center; background-repeat: no-repeat;"';
+        }
+        else
+        {
+            background_style = card_generate_color_gradient_style(color, options);
+        }
+        var icon = card_data_icon_back(data, options);
 
-    return result;
+        var result = "";
+        console.log('options.rounded_corners', options.rounded_corners);
+        result += '<div class="card card-size-' + options.card_size + ' ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + style_color + '>';
+        result += '  <div class="card-back" ' + background_style + '>';
+        if (!url)
+        {
+            result += '    <div class="card-back-inner">';
+            result += '      <div class="card-back-icon icon-' + icon + '" ' + style_color + '></div>';
+            result += '    </div>';
+        }
+        result += '  </div>';
+        result += '</div>';
+
+        return result;
+    }
 }
 
 function card_generate_empty(count, options) {

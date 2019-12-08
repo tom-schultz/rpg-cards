@@ -533,6 +533,7 @@ $(document).ready(function () {
     $("#card-size").change(ui_change_option);
     $("#background-color").change(ui_change_option);
     $("#rounded-corners").change(ui_change_option);
+    $("#frame-back").change(ui_change_option);
 
     $("#default-color").change(ui_change_default_color);
     $("#default-icon").change(ui_change_default_icon);
