@@ -3,7 +3,8 @@ function receiveMessage(event) {
     insertCards(html);
 
     if(event.data.wrapText) {
-      wrapCards();
+      // Delay to allow cards to render as we use rendered height to wrap
+      setTimeout(wrapCards, 500);
     }
 }
 
@@ -34,20 +35,25 @@ function wrapCards() {
     cardContent.innerHTML += '<div class="card-element card-description-line"><p class="card-p card-description-text wrap-message">(continued on back)</p></div>';
 
     page = card.parentElement;
-    cardIndex = [...page.children].indexOf(card);
     nextPage = page.nextElementSibling;
-    back = nextPage.children[cardIndex];
+    title = card.getElementsByClassName('card-title')[0].textContent;
 
-    nextPage.replaceChild(card.cloneNode(true), back);
-    back = nextPage.children[cardIndex];
+    back = getBack(nextPage, title);
     backContent = back.getElementsByClassName('card-content-container')[0];
-    backContent.innerHTML = '';
 
     while(card.scrollHeight !== card.clientHeight) {
       el = cardContent.removeChild(cardContent.lastElementChild.previousElementSibling);
       backContent.insertBefore(el, backContent.firstElementChild);
     }
   });
+}
+
+function getBack(nextPage, title) {
+  for (cardTitle of [...nextPage.getElementsByClassName('card-title')]) {
+    if (cardTitle.textContent === title) {
+      return cardTitle.parentElement;
+    }
+  }
 }
 
 window.addEventListener("message", receiveMessage, false);
